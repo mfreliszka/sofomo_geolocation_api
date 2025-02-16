@@ -2,8 +2,8 @@
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
-from geolocation_api.clients import IpstackClient
-from geolocation_api.api.dependencies.common import ipstack_client_dependency
+from app.clients import IpstackClient
+from app.api.dependencies.common import ipstack_client_dependency
 
 router = APIRouter()
 

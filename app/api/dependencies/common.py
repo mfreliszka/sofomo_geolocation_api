@@ -1,7 +1,7 @@
 """Module containing common dependencies."""
 
 from functools import lru_cache
-from geolocation_api.clients import IpstackClient
+from app.clients import IpstackClient
 
 
 @lru_cache

@@ -2,7 +2,7 @@
 
 import httpx
 from config.settings import settings
-from geolocation_api.decorators import handle_ipstack_errors
+from app.decorators import handle_ipstack_errors
 
 
 class IpstackClient:

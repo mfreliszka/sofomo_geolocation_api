@@ -8,15 +8,15 @@ install-deploy:
 	poetry install
 
 run:
-	uvicorn geolocation_api.main:application_factory --factory --reload
+	uvicorn app.main:application_factory --factory --reload
 
 run-deploy:
-	uvicorn --host 0.0.0.0 --port 8080 geolocation_api.main:application_factory --factory
+	uvicorn --host 0.0.0.0 --port 8080 app.main:application_factory --factory
 
 lint:
-	mypy geolocation_api config
-	ruff check geolocation_api tests config
-	ruff format --check geolocation_api tests config
+	mypy app config
+	ruff check app tests config
+	ruff format --check app tests config
 
 format:
 	ruff format .

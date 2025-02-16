@@ -2,7 +2,7 @@
 
 from config.settings import Settings
 from fastapi import FastAPI
-from geolocation_api.router import api_router_factory
+from app.router import api_router_factory
 
 
 def application_factory() -> FastAPI:

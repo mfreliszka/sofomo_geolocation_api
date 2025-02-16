@@ -19,6 +19,7 @@ httpx = "^0.28.1"
 alembic = "^1.14.1"
 asyncpg = "^0.30.0"
 sqlalchemy-stubs = "^0.4"
+loguru = "^0.7.3"
 
 [tool.mypy]
 plugins = 'sqlmypy'

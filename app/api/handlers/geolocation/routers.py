@@ -1,7 +1,7 @@
 """Module containing geolocation api router configuration."""
 
 from fastapi import APIRouter
-from geolocation_api.api.handlers.geolocation.add import (
+from app.api.handlers.geolocation.add import (
     router as add_geolocation_router,
 )
 
