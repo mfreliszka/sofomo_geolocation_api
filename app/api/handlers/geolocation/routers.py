@@ -4,6 +4,15 @@ from fastapi import APIRouter
 from app.api.handlers.geolocation.add import (
     router as add_geolocation_router,
 )
+from app.api.handlers.geolocation.get import (
+    router as get_geolocation_router,
+)
+from app.api.handlers.geolocation.delete import (
+    router as delete_geolocation_router,
+)
+from app.api.handlers.geolocation.list import (
+    router as list_geolocation_router,
+)
 
 
 def geolocation_api_router_factory() -> APIRouter:
@@ -14,6 +23,9 @@ def geolocation_api_router_factory() -> APIRouter:
 
     endpoint_routers = [
         add_geolocation_router,
+        get_geolocation_router,
+        delete_geolocation_router,
+        list_geolocation_router,
     ]
 
     for endpoint_router in endpoint_routers:

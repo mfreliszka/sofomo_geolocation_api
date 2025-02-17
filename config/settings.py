@@ -21,16 +21,10 @@ class Settings(BaseSettings):
     environment: ApplicationEnvironment = ApplicationEnvironment.DEVELOPMENT
     application_url: str = "http://127.0.0.1:8000"
 
-    ipstack_access_key: str = Field(
-        default="db1d75027952e614f174dd222ffeb857", alias="IPSTACK_ACCESS_KEY"
-    )
+    ipstack_access_key: str = Field(default="123", alias="IPSTACK_ACCESS_KEY")
     ipstack_api_url: str = Field(
         default="http://api.ipstack.com/", alias="IPSTACK_API_URL"
     )
-    # database_url: str = Field(
-    #     default="postgresql://postgres:postgres@localhost:5432/GeolocationAPI",
-    #     alias="DATABASE_URL",
-    # )
     ipstack_timeout: int = Field(default=10, alias="IPSTACK_TIMEOUT")
 
     # database settings
@@ -46,5 +40,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-print(settings.db_port)
-print(settings.database_url)

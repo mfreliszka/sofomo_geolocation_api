@@ -1,17 +1,27 @@
 import asyncio
 from logging.config import fileConfig
 
-from config.settings import settings
+import pathlib
+import sys
+
+
+from loguru import logger
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
-
 from alembic import context
+
+# allow migrations to import from 'app'
+sys.path.append(str(pathlib.Path(__file__).resolve().parents[1]))
+from config.settings import settings
+from app.db.models.base import Base
+from app.db.models.metadata import metadata_family
+from app.db.models.models import IPGeolocation
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-config.set_main_option("sqlalchemy.url", settings.database_url)
+# config.set_main_option("sqlalchemy.url", settings.database_url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -20,7 +30,6 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from app.api.models import Base
 
 target_metadata = Base.metadata
 # target_metadata = None
@@ -45,7 +54,7 @@ def run_migrations_offline() -> None:
     """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url,
+        url=settings.database_url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -67,7 +76,7 @@ async def run_async_migrations() -> None:
     and associate a connection with the context.
 
     """
-
+    config.set_main_option("sqlalchemy.url", settings.database_url)
     connectable = async_engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
@@ -87,6 +96,8 @@ def run_migrations_online() -> None:
 
 
 if context.is_offline_mode():
+    logger.info("Running migrations offline.")
     run_migrations_offline()
 else:
+    logger.info("Running migrations online.")
     run_migrations_online()

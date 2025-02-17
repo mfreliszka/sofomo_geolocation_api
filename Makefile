@@ -1,5 +1,3 @@
-
-
 install:
 	poetry install
 
@@ -14,7 +12,6 @@ run-deploy:
 	uvicorn --host 0.0.0.0 --port 8080 app.main:application_factory --factory
 
 lint:
-	mypy app config
 	ruff check app tests config
 	ruff format --check app tests config
 
@@ -26,9 +23,3 @@ migrate:
 
 makemigrations:
 	poetry run alembic revision --autogenerate -m "New Migration"
-
-dropdb:
-	poetry run alembic downgrade base
-
-createdb:
-	poetry run alembic init alembic

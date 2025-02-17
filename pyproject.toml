@@ -13,16 +13,12 @@ uvicorn = "^0.34.0"
 sqlalchemy = "^2.0.38"
 pydantic-settings = "^2.7.1"
 ruff = "^0.9.6"
-mypy = "^1.15.0"
 pytest = "^8.3.4"
 httpx = "^0.28.1"
 alembic = "^1.14.1"
 asyncpg = "^0.30.0"
 sqlalchemy-stubs = "^0.4"
 loguru = "^0.7.3"
-
-[tool.mypy]
-plugins = 'sqlmypy'
 
 [build-system]
 requires = ["poetry-core"]

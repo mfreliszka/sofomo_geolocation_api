@@ -22,4 +22,4 @@ class IDSchemaMixin(BaseModel):
 
     class Config:
         # allow database schematas mapping to ORM objects
-        orm_mode = True
+        from_attributes = True

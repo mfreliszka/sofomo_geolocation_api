@@ -7,12 +7,12 @@ from app.db.models.base import Base, BaseDBModel
 from app.db.models.metadata import metadata_family
 
 
-class Geolocation(Base, BaseDBModel):
+class IPGeolocation(Base, BaseDBModel):
     """Database model representing 'parent' table in db."""
 
     __metadata__ = metadata_family
 
-    ip = Column(String, index=True)
+    ip = Column(String, index=True, unique=True)
     type = Column(String)
     continent_code = Column(String)
     continent_name = Column(String)
