@@ -80,75 +80,11 @@ async def add_geolocation(
             print(geolocation_response)
     except HTTPException as http_exc:
         raise
-    # except Exception as e:
-    #     logger.error(f"Unexpected error in add_geolocation: {str(e)}")
-    #     raise HTTPException(status_code=500, detail=str(e))
 
     ip_geolocation_new = IPGeolocationCreate(**geolocation_response)
     created_record = await ip_geolocation_repo.create(obj_new=ip_geolocation_new)
 
     return created_record
-    # try:
-    #     # First try to get existing record
-    #     try:
-    #         existing_record = await ip_geolocation_repo.get_by_ip(request.ip_address)
-    #         if existing_record:
-    #             return JSONResponse(
-    #                 status_code=status.HTTP_200_OK,
-    #                 content={
-    #                     "message": f"Geolocation for IP {request.ip_address} already exists in database",
-    #                     "data": jsonable_encoder(
-    #                         IPGeolocationInDB.model_validate(existing_record)
-    #                     ),
-    #                 },
-    #             )
-    #     except SQLAlchemyError as db_error:
-    #         logger.error(f"Database error while checking existing record: {str(db_error)}")
-    #         raise HTTPException(
-    #             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-    #             detail="Database service is temporarily unavailable. Please try again later."
-    #         )
-
-    #     # Try to get data from IPStack
-    #     try:
-    #         async with ipstack_client as client:
-    #             geolocation_response = await client.get_geolocation(request.ip_address)
-    #     except HTTPException:
-    #         # Re-raise HTTP exceptions from IPStack client
-    #         raise
-    #     except Exception as e:
-    #         logger.error(f"Unexpected error while fetching geolocation: {str(e)}")
-    #         raise HTTPException(
-    #             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    #             detail="An unexpected error occurred while processing your request."
-    #         )
-
-    #     # Try to create new record
-    #     try:
-    #         ip_geolocation_new = IPGeolocationCreate(**geolocation_response)
-    #         created_record = await ip_geolocation_repo.create(obj_new=ip_geolocation_new)
-    #         return created_record
-    #     except SQLAlchemyError as db_error:
-    #         logger.error(f"Database error while creating new record: {str(db_error)}")
-    #         raise HTTPException(
-    #             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-    #             detail="Database service is temporarily unavailable. Please try again later."
-    #         )
-    #     except ValidationError as val_error:
-    #         logger.error(f"Validation error with IPStack response: {str(val_error)}")
-    #         raise HTTPException(
-    #             status_code=status.HTTP_502_BAD_GATEWAY,
-    #             detail="Received invalid data format from geolocation service."
-    #         )
-
-    # except HTTPException:
-    #     raise
-    # except Exception as e:
-    #     logger.error(f"Unexpected error in add_geolocation: {str(e)}")
-    #     raise HTTPException(
-    #         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-    #         detail="An unexpected error occurred while processing your request."
-    #     )
 
 
 @router.delete(
