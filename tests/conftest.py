@@ -1,131 +1,111 @@
 """Test configuration and fixtures."""
-import asyncio
+import json
 from typing import AsyncGenerator, Generator
 import pytest
 from fastapi import FastAPI
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
-from sqlalchemy.pool import NullPool
+from sqlalchemy.pool import StaticPool
+from unittest.mock import AsyncMock
+
+from app.db.repositories.geolocation import IPGeolocationRepository
+from app.models.models import IPGeolocationInDB
 
 from app.db.models.base import Base
 from app.main import application_factory
 from app.api.dependencies.common import get_repository_dependency, ipstack_client_dependency
 from app.db.repositories.geolocation import IPGeolocationRepository
 from app.clients import IpstackClient
+from pathlib import Path
+from sqlalchemy.orm import sessionmaker
 
-# Test database URL - użyj zmiennych środowiskowych w prawdziwej aplikacji
-TEST_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5432/test_db"
-
-# Mock data dla IpstackClient
-MOCK_IPSTACK_RESPONSE = {
-    "ip": "8.8.8.8",
-    "type": "ipv4",
-    "continent_code": "NA",
-    "continent_name": "North America",
-    "country_code": "US",
-    "country_name": "United States",
-    "region_code": "OH",
-    "region_name": "Ohio",
-    "city": "Glenmont",
-    "zip": "44628",
-    "latitude": 40.5369987487793,
-    "longitude": -82.12859344482422
-}
 
 @pytest.fixture
 def app() -> FastAPI:
     """Get fastapi application instance."""
     return application_factory()
 
-@pytest.fixture(scope="session")
-def event_loop() -> Generator:
-    """Create an event loop for testing."""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
-
-@pytest.fixture(scope="session")
-async def test_db_engine():
-    """Create a test database engine."""
-    engine = create_async_engine(
-        TEST_DATABASE_URL,
-        poolclass=NullPool,
-    )
-    
-    # Utwórz wszystkie tabele
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
-    
-    yield engine
-    
-    # Cleanup po testach
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-    await engine.dispose()
+# @pytest.fixture
+# def mock_async_engine():
+#     """Create a mock async engine for testing."""
+#     engine = create_async_engine("sqlite+aiosqlite:///:memory:", echo=False)
+#     return engine
 
 @pytest.fixture
-async def test_db_session(test_db_engine) -> AsyncGenerator[AsyncSession, None]:
-    """Create a test database session."""
-    async_session = async_sessionmaker(
-        test_db_engine,
-        class_=AsyncSession,
-        expire_on_commit=False,
+def mock_async_engine():
+    """Create a mock async engine for testing."""
+    engine = create_async_engine(
+        "sqlite+aiosqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+        echo=True
     )
-    
+    return engine
+
+
+
+@pytest.fixture
+async def mock_db_session(mock_async_engine):
+    """Return a mocked database session."""
+    async_session = sessionmaker(
+        bind=mock_async_engine,
+        class_=AsyncSession,
+        expire_on_commit=False
+    )
+
     async with async_session() as session:
         yield session
-        # Rollback po każdym teście
-        await session.rollback()
+
+@pytest.fixture(autouse=True)
+def override_db_engine(monkeypatch, mock_async_engine):
+    """Override the get_async_engine function to return a mock engine."""
+    monkeypatch.setattr("app.db.db_session.get_async_engine", lambda: mock_async_engine)
+
 
 @pytest.fixture
-async def mock_ipstack_client() -> IpstackClient:
-    """Create a mock IpstackClient."""
+def mock_ip_geolocation_repo(mock_db_session):
+    """Mock the IPGeolocationRepository using a mocked AsyncSession."""
+    repo = IPGeolocationRepository(mock_db_session)
+
+    # Mock get_by_ip to return None (simulate no existing record)
+    repo.get_by_ip = AsyncMock(return_value=None)
+
+    # Mock create method
+    async def create_mock(obj_new):
+        """Simulate inserting into the database."""
+        return IPGeolocationInDB(id=1, **obj_new.model_dump())
+
+    repo.create = AsyncMock(side_effect=create_mock)
+
+    return repo
+
+
+@pytest.fixture
+def mock_ipstack_client():
+    """Mock the IpstackClient dependency while preserving async context manager behavior."""
+    
     class MockIpstackClient:
+        """Mocked version of IpstackClient."""
+        
+        def __init__(self):
+            # Load mock response from a file
+            json_path = Path(__file__).parent / "json/response.json"
+            with json_path.open("r", encoding="utf-8") as file:
+                self.mock_response = json.load(file)
+
         async def __aenter__(self):
-            return self
-            
+            """Simulate entering the async context."""
+            return self  # Return itself as a context manager
+
         async def __aexit__(self, exc_type, exc_val, exc_tb):
-            pass
-            
-        async def get_geolocation(self, ip_address: str) -> dict:
-            if ip_address == "invalid_ip":
-                raise ValueError("Invalid IP address")
-            return MOCK_IPSTACK_RESPONSE
+            """Simulate exiting the async context."""
+            pass  # No cleanup needed
+
+        async def get_geolocation(self, ip_address: str):
+            """Mocked get_geolocation method."""
+            return self.mock_response
 
     return MockIpstackClient()
-
-@pytest.fixture
-def override_dependencies(test_db_session, mock_ipstack_client,app: FastAPI) -> FastAPI:
-    """Override dependencies for testing."""
-    async def get_test_session():
-        yield test_db_session
-
-    async def get_test_ipstack_client():
-        yield mock_ipstack_client
-
-    app.dependency_overrides[get_repository_dependency(IPGeolocationRepository)] = get_test_session
-    app.dependency_overrides[ipstack_client_dependency] = get_test_ipstack_client
-    
-    return app
-
-@pytest.fixture
-async def test_client(override_dependencies) -> AsyncGenerator[AsyncClient, None]:
-    """Create a test client with overridden dependencies."""
-    async with AsyncClient(app=override_dependencies, base_url="http://test") as client:
-        yield client
-
-@pytest.fixture
-async def test_geolocation_in_db(test_db_session) -> dict:
-    """Create a test geolocation record in the database."""
-    from app.db.models.models import IPGeolocation
-    
-    geolocation = IPGeolocation(**MOCK_IPSTACK_RESPONSE)
-    test_db_session.add(geolocation)
-    await test_db_session.commit()
-    await test_db_session.refresh(geolocation)
-    
-    return MOCK_IPSTACK_RESPONSE
 
 # Helper fixtures dla często używanych operacji
 @pytest.fixture
