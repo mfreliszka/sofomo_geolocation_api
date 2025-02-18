@@ -24,9 +24,6 @@ class IPGeolocationCreate(IPGeolocationBase):
     pass
 
 
-class IPGeolocationUpdate(IPGeolocationBase):
-    id: int
-
 
 class IPGeolocationInDB(IPGeolocationBase, IDSchemaMixin):
     """Schema for 'IPGeolocation' in database."""

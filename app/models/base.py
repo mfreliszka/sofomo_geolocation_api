@@ -21,5 +21,5 @@ class IDSchemaMixin(BaseModel):
     id: int
 
     class Config:
-        # allow database schematas mapping to ORM objects
         from_attributes = True
+        model_exclude = {'id'}

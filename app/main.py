@@ -3,6 +3,7 @@
 from config.settings import Settings
 from fastapi import FastAPI
 from app.router import api_router_factory
+from app.middleware import DatabaseAvailabilityMiddleware
 
 
 def application_factory() -> FastAPI:
@@ -24,6 +25,7 @@ def application_factory() -> FastAPI:
         ],
     )
 
+    app.add_middleware(DatabaseAvailabilityMiddleware)
     app.include_router(api_router_factory(api_url_prefix))
 
     return app

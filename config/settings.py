@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     environment: ApplicationEnvironment = ApplicationEnvironment.DEVELOPMENT
     application_url: str = "http://127.0.0.1:8000"
 
-    ipstack_access_key: str = Field(default="123", alias="IPSTACK_ACCESS_KEY")
+    ipstack_access_key: str = Field(default="", alias="IPSTACK_ACCESS_KEY")
     ipstack_api_url: str = Field(
         default="http://api.ipstack.com/", alias="IPSTACK_API_URL"
     )

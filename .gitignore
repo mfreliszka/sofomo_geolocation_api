@@ -27,7 +27,7 @@ share/python-wheels/
 MANIFEST
 
 # Alembic migrations
-alembic/versions/*
+migrations/versions/*
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
