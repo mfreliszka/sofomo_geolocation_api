@@ -1,8 +1,8 @@
 """Contains fastapi router factory."""
 
 from fastapi import APIRouter
-from geolocation_api.api.handlers.maintenance import router as maintenance_router
-from geolocation_api.api.handlers.geolocation.routers import (
+from app.api.handlers.maintenance import router as maintenance_router
+from app.api.handlers.geolocation.routers import (
     geolocation_api_router_factory,
 )
 

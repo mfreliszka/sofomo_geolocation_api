@@ -3,6 +3,7 @@ name = "sofomo-geolocation-api"
 version = "0.1.0"
 description = ""
 authors = ["Michał Freliszka <mfreliszka@gmail.com>"]
+package-mode = false
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -11,11 +12,14 @@ fastapi = "^0.115.8"
 uvicorn = "^0.34.0"
 sqlalchemy = "^2.0.38"
 pydantic-settings = "^2.7.1"
-psycopg2-binary = "^2.9.10"
 ruff = "^0.9.6"
-mypy = "^1.15.0"
 pytest = "^8.3.4"
 httpx = "^0.28.1"
+alembic = "^1.14.1"
+asyncpg = "^0.30.0"
+sqlalchemy-stubs = "^0.4"
+loguru = "^0.7.3"
+greenlet = "^3.1.1"
 
 [build-system]
 requires = ["poetry-core"]
