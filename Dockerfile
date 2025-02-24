@@ -1,25 +1,25 @@
-FROM python:3.11
+#FROM python:3.11-slim
+# docker image with poetry 1.8.5 and python 3.11.11 preinstalled
+FROM pfeiffermax/python-poetry:1.14.0-poetry1.8.5-python3.11.11-slim-bookworm
 
 # Install dependencies for building the app
-RUN apt update && \
-    apt install make gcc g++ -y && \
-    pip install --no-cache-dir poetry
+RUN apt-get update && apt-get install -y make
 
-WORKDIR /src/
+WORKDIR /src
 
-# Copy necessary files to /src/ folder
 COPY poetry.lock pyproject.toml /src/
 COPY Makefile /src/
 
-# Install dependencies and deploy
+# Install poetry
+# RUN curl -sSL https://install.python-poetry.org | python3 - \
+#     && ln -s /root/.local/bin/poetry /usr/local/bin/poetry
+
+# Install dependencies
 RUN make install-deploy
 
-# Install the project dependencies with poetry
-RUN pip install poetry && poetry install --no-root
-
-# Copy the remaining files, including README.md
+# Copy app directory into src
 COPY . /src/
 
-EXPOSE 8000
+EXPOSE 8080
 
-CMD ["make", "run"]
+CMD ["make", "run-deploy"]

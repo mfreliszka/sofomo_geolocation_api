@@ -16,7 +16,7 @@ class Pong(BaseModel):
     timestamp: float
 
 
-@router.get("/ping", response_model=Pong)
+@router.get("/ping", name="ping", response_model=Pong)
 async def ping() -> Pong:
     """Return ok simply when server is available."""
     return Pong(message="pong", timestamp=time())

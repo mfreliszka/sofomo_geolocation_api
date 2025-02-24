@@ -1,25 +1,9 @@
-"""Base classes for pydantic domain models.
-
-Allows for pydantic validation via inheritence from pydantics 'BaseModel'
-"""
+"""Module containing base classes for pydantic domain models."""
 
 from pydantic import BaseModel
 
 
 class BaseSchema(BaseModel):
-    """Base pydantic schema for domain models.
-
-    Share common logic here.
-    """
+    """Base pydantic schema for domain models."""
 
     pass
-
-
-class IDSchemaMixin(BaseModel):
-    """Base pydantic schema to be inherited from by database schema."""
-
-    id: int
-
-    class Config:
-        from_attributes = True
-        model_exclude = {'id'}

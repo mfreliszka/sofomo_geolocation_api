@@ -1,0 +1,21 @@
+# serializer version: 1
+# name: test_delete_invalid_ip_address[asyncio]
+  dict({
+    'detail': "Invalid IP address: 'invalid_ip'",
+  })
+# ---
+# name: test_delete_invalid_ip_address[trio]
+  dict({
+    'detail': "Invalid IP address: 'invalid_ip'",
+  })
+# ---
+# name: test_delete_not_existing_geolocation[asyncio]
+  dict({
+    'detail': "Geolocation for IP '1.1.1.1' not found in database.",
+  })
+# ---
+# name: test_delete_not_existing_geolocation[trio]
+  dict({
+    'detail': "Geolocation for IP '1.1.1.1' not found in database.",
+  })
+# ---

@@ -1,8 +1,8 @@
-"""Declaring base model classes for sqlalchemy models."""
+"""Module containing base model classes for sqlalchemy models."""
 
 from sqlalchemy import Column, DateTime, Integer
 from sqlalchemy.ext.declarative import declared_attr
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.sql import func
 
 
@@ -21,9 +21,4 @@ class BaseDBModel:
     def __tablename__(cls) -> str:
         return cls.__name__.lower()
 
-    # refresh server defaults with asyncio
-    # https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html#synopsis-orm
-    # required in order to access columns with server defaults
-    # or SQL expression defaults, subsequent to a flush, without
-    # triggering an expired load
     __mapper_args__ = {"eager_defaults": True}

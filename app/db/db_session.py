@@ -1,35 +1,59 @@
-"""Module containing connection to the Postgres database settings."""
+"""Module containing database session configuration."""
 
-from loguru import logger
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
-
+import contextlib
+from typing import Any, AsyncIterator
 from config.settings import settings
-from app.db.models.base import Base
+from sqlalchemy.ext.asyncio import (
+    AsyncConnection,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 
-def get_async_engine() -> AsyncEngine:
-    """Return async database engine."""
-    try:
-        async_engine: AsyncEngine = create_async_engine(
-            settings.database_url,
-            future=True,
-        )
-    except SQLAlchemyError as e:
-        logger.warning("Unable to establish db engine, database might not exist yet")
-        logger.warning(e)
+class DatabaseSessionManager:
+    def __init__(self, host: str, engine_kwargs: dict[str, Any] = {}):
+        self._engine = create_async_engine(host, **engine_kwargs)
+        self._sessionmaker = async_sessionmaker(autocommit=False, bind=self._engine)
 
-    return async_engine
+    async def close(self):
+        if self._engine is None:
+            raise Exception("DatabaseSessionManager is not initialized")
+        await self._engine.dispose()
+
+        self._engine = None
+        self._sessionmaker = None
+
+    @contextlib.asynccontextmanager
+    async def connect(self) -> AsyncIterator[AsyncConnection]:
+        if self._engine is None:
+            raise Exception("DatabaseSessionManager is not initialized")
+
+        async with self._engine.begin() as connection:
+            try:
+                yield connection
+            except Exception:
+                await connection.rollback()
+                raise
+
+    @contextlib.asynccontextmanager
+    async def session(self) -> AsyncIterator[AsyncSession]:
+        if self._sessionmaker is None:
+            raise Exception("DatabaseSessionManager is not initialized")
+
+        session = self._sessionmaker()
+        try:
+            yield session
+        except Exception:
+            await session.rollback()
+            raise
+        finally:
+            await session.close()
 
 
-async def initialize_database() -> None:
-    """Create table in metadata if they don't exist yet.
+sessionmanager = DatabaseSessionManager(settings.database_url, {"echo": True})
 
-    This uses a sync connection because the 'create_all' doesn't
-    feature async yet.
-    """
-    async_engine = get_async_engine()
-    async with async_engine.begin() as async_conn:
-        await async_conn.run_sync(Base.metadata.create_all)
 
-        logger.success("Initializing database was successfull.")
+async def get_db_session():
+    async with sessionmanager.session() as session:
+        yield session

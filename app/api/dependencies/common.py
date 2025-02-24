@@ -6,7 +6,7 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.repositories.base import SQLAlchemyRepository
-from app.api.dependencies.database import get_async_session
+from app.db.db_session import get_db_session
 
 SQLA_REPO_TYPE = TypeVar("SQLA_REPO_TYPE", bound=SQLAlchemyRepository)
 
@@ -17,7 +17,7 @@ def get_repository_dependency(
     """Returns specified repository seeded with an async database session."""
 
     def get_repo(
-        db: AsyncSession = Depends(get_async_session),
+        db: AsyncSession = Depends(get_db_session),
     ) -> Type[SQLA_REPO_TYPE]:
         return repo_type(db=db)
 
