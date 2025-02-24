@@ -22,4 +22,16 @@ migrate:
 	poetry run alembic upgrade head
 
 makemigrations:
-	poetry run alembic revision --autogenerate -m "New Migration"
+	poetry run alembic revision --autogenerate -m "Initial migration"
+
+up:
+	docker compose up -d
+
+down:
+	docker compose down -v
+
+build:
+	docker compose build
+
+test:
+	TESTING=1 docker compose run --rm -e TESTING backend pytest . -vv

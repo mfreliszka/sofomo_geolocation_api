@@ -1,11 +1,9 @@
-"""Domain Repository for 'Geolocation' entity.
-
-All logic related to the geolocation entity is defined and grouped here.
-"""
+"""Module containing domain repository for Geolocation entity."""
 
 from app.db.models.models import IPGeolocation
 from app.db.repositories.base import SQLAlchemyRepository
 from app.models.models import IPGeolocationCreate
+from sqlalchemy import select, func
 
 
 class IPGeolocationRepository(SQLAlchemyRepository):
@@ -19,16 +17,19 @@ class IPGeolocationRepository(SQLAlchemyRepository):
 
     create_schema = IPGeolocationCreate
 
+    async def count(self) -> int:
+        """Get total count of records."""
+        query = select(func.count()).select_from(self.sqla_model)
+        result = await self.db.execute(query)
+        return result.scalar()
+
     async def list(self, offset: int = 0, limit: int = 10):
         """Get paginated list of IP geolocations."""
-        query = """
-            SELECT *
-            FROM ip_geolocation
-            ORDER BY id
-            LIMIT :limit OFFSET :offset
-        """
-        records = await self.db.fetch_all(
-            query=query,
-            values={"limit": limit, "offset": offset}
+        query = (
+            select(self.sqla_model)
+            .order_by(self.sqla_model.id)
+            .offset(offset)
+            .limit(limit)
         )
-        return records
+        result = await self.db.execute(query)
+        return result.scalars().all()

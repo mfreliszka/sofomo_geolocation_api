@@ -10,14 +10,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.models.base import Base
 from app.models.base import BaseSchema
 
-# sqlalchemy models
-SQLA_MODEL = TypeVar("SQLA_MODEL", bound=Base)
 
-# pydantic models
+SQLA_MODEL = TypeVar("SQLA_MODEL", bound=Base)
 CREATE_SCHEMA = TypeVar("CREATE_SCHEMA", bound=BaseSchema)
 
 
-## ===== CRUD Repo ===== ##
 class SQLAlchemyRepository(ABC):
     """Abstract SQLAlchemy repo defining basic database operations.
 
@@ -31,16 +28,14 @@ class SQLAlchemyRepository(ABC):
     ) -> None:
         self.db = db
 
-    # models and schemas object instanziation and validation
     sqla_model = SQLA_MODEL
 
     create_schema = CREATE_SCHEMA
 
-    ## ===== Basic Crud Operations ===== ##
     async def create(self, obj_new: create_schema) -> sqla_model | None:
         """Commit new object to the database."""
         try:
-            db_obj_new = self.sqla_model(**obj_new.dict())
+            db_obj_new = self.sqla_model(**obj_new.model_dump())
             self.db.add(db_obj_new)
 
             await self.db.commit()
@@ -84,9 +79,3 @@ class SQLAlchemyRepository(ABC):
 
         logger.warning(f"Object with ip = {ip} not found in database")
         return None
-
-    async def list(self) -> list[SQLA_MODEL]:
-        """Get all objects from database."""
-        query = select(self.sqla_model)
-        result = await self.db.execute(query)
-        return result.scalars().all()

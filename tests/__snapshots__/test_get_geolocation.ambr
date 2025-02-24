@@ -1,0 +1,57 @@
+# serializer version: 1
+# name: test_get_existing_geolocation[asyncio]
+  dict({
+    'city': 'Mountain View',
+    'continent_code': 'NA',
+    'continent_name': 'North America',
+    'country_code': 'US',
+    'country_name': 'United States',
+    'id': 1,
+    'ip': '8.8.8.8',
+    'latitude': 37.422,
+    'longitude': -122.084,
+    'region_code': 'CA',
+    'region_name': 'California',
+    'type': 'IPv4',
+    'updated_at': '2020-01-01T00:00:00',
+    'zip': '94043',
+  })
+# ---
+# name: test_get_existing_geolocation[trio]
+  dict({
+    'city': 'Mountain View',
+    'continent_code': 'NA',
+    'continent_name': 'North America',
+    'country_code': 'US',
+    'country_name': 'United States',
+    'id': 1,
+    'ip': '8.8.8.8',
+    'latitude': 37.422,
+    'longitude': -122.084,
+    'region_code': 'CA',
+    'region_name': 'California',
+    'type': 'IPv4',
+    'updated_at': '2020-01-01T00:00:00',
+    'zip': '94043',
+  })
+# ---
+# name: test_get_invalid_ip_address[asyncio]
+  dict({
+    'detail': "Invalid IP address: 'invalid_ip'",
+  })
+# ---
+# name: test_get_invalid_ip_address[trio]
+  dict({
+    'detail': "Invalid IP address: 'invalid_ip'",
+  })
+# ---
+# name: test_get_not_existing_geolocation[asyncio]
+  dict({
+    'detail': "Geolocation for IP '1.1.1.1' not found in database.",
+  })
+# ---
+# name: test_get_not_existing_geolocation[trio]
+  dict({
+    'detail': "Geolocation for IP '1.1.1.1' not found in database.",
+  })
+# ---

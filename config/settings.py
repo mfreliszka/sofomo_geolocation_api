@@ -19,7 +19,11 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     environment: ApplicationEnvironment = ApplicationEnvironment.DEVELOPMENT
-    application_url: str = "http://127.0.0.1:8000"
+    TESTING: bool = False
+    project_name: str = Field(default="Sofomo Geolocation API", alias="PROJECT_NAME")
+    application_url: str = Field(
+        default="http://127.0.0.1:8080", alias="APPLICATION_URL"
+    )
 
     ipstack_access_key: str = Field(default="", alias="IPSTACK_ACCESS_KEY")
     ipstack_api_url: str = Field(
@@ -30,7 +34,7 @@ class Settings(BaseSettings):
     # database settings
     db_user: str = Field(default="postgres", alias="DB_USER")
     db_password: str = Field(default="postgres", alias="DB_PASSWORD")
-    db_host: str = Field(default="localhost", alias="DB_HOST")
+    db_host: str = Field(default="postgres", alias="DB_HOST")
     db_port: int = Field(default=5432, alias="DB_PORT")
     db_name: str = Field(default="GeolocationAPI", alias="DB_NAME")
 

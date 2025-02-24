@@ -1,0 +1,201 @@
+# serializer version: 1
+# name: test_empty_list_of_geolocations[asyncio]
+  dict({
+    'items': list([
+    ]),
+    'limit': 10,
+    'offset': 0,
+    'total': 0,
+  })
+# ---
+# name: test_empty_list_of_geolocations[trio]
+  dict({
+    'items': list([
+    ]),
+    'limit': 10,
+    'offset': 0,
+    'total': 0,
+  })
+# ---
+# name: test_list_existing_geolocations[asyncio]
+  dict({
+    'items': list([
+      dict({
+        'city': 'Mountain View',
+        'continent_code': 'NA',
+        'continent_name': 'North America',
+        'country_code': 'US',
+        'country_name': 'United States',
+        'id': 1,
+        'ip': '8.8.8.8',
+        'latitude': 37.422,
+        'longitude': -122.084,
+        'region_code': 'CA',
+        'region_name': 'California',
+        'type': 'IPv4',
+        'updated_at': '2020-01-01T00:00:00',
+        'zip': '94043',
+      }),
+      dict({
+        'city': 'Mountain View',
+        'continent_code': 'NA',
+        'continent_name': 'North America',
+        'country_code': 'US',
+        'country_name': 'United States',
+        'id': 2,
+        'ip': '8.8.8.7',
+        'latitude': 37.422,
+        'longitude': -122.084,
+        'region_code': 'OH',
+        'region_name': 'Ohio',
+        'type': 'IPv4',
+        'updated_at': '2020-01-01T00:00:00',
+        'zip': '94043',
+      }),
+    ]),
+    'limit': 10,
+    'offset': 0,
+    'total': 2,
+  })
+# ---
+# name: test_list_existing_geolocations[trio]
+  dict({
+    'items': list([
+      dict({
+        'city': 'Mountain View',
+        'continent_code': 'NA',
+        'continent_name': 'North America',
+        'country_code': 'US',
+        'country_name': 'United States',
+        'id': 1,
+        'ip': '8.8.8.8',
+        'latitude': 37.422,
+        'longitude': -122.084,
+        'region_code': 'CA',
+        'region_name': 'California',
+        'type': 'IPv4',
+        'updated_at': '2020-01-01T00:00:00',
+        'zip': '94043',
+      }),
+      dict({
+        'city': 'Mountain View',
+        'continent_code': 'NA',
+        'continent_name': 'North America',
+        'country_code': 'US',
+        'country_name': 'United States',
+        'id': 2,
+        'ip': '8.8.8.7',
+        'latitude': 37.422,
+        'longitude': -122.084,
+        'region_code': 'OH',
+        'region_name': 'Ohio',
+        'type': 'IPv4',
+        'updated_at': '2020-01-01T00:00:00',
+        'zip': '94043',
+      }),
+    ]),
+    'limit': 10,
+    'offset': 0,
+    'total': 2,
+  })
+# ---
+# name: test_list_existing_geolocations_with_limit[asyncio]
+  dict({
+    'items': list([
+      dict({
+        'city': 'Mountain View',
+        'continent_code': 'NA',
+        'continent_name': 'North America',
+        'country_code': 'US',
+        'country_name': 'United States',
+        'id': 1,
+        'ip': '8.8.8.8',
+        'latitude': 37.422,
+        'longitude': -122.084,
+        'region_code': 'CA',
+        'region_name': 'California',
+        'type': 'IPv4',
+        'updated_at': '2020-01-01T00:00:00',
+        'zip': '94043',
+      }),
+    ]),
+    'limit': 1,
+    'offset': 0,
+    'total': 2,
+  })
+# ---
+# name: test_list_existing_geolocations_with_limit[trio]
+  dict({
+    'items': list([
+      dict({
+        'city': 'Mountain View',
+        'continent_code': 'NA',
+        'continent_name': 'North America',
+        'country_code': 'US',
+        'country_name': 'United States',
+        'id': 1,
+        'ip': '8.8.8.8',
+        'latitude': 37.422,
+        'longitude': -122.084,
+        'region_code': 'CA',
+        'region_name': 'California',
+        'type': 'IPv4',
+        'updated_at': '2020-01-01T00:00:00',
+        'zip': '94043',
+      }),
+    ]),
+    'limit': 1,
+    'offset': 0,
+    'total': 2,
+  })
+# ---
+# name: test_list_existing_geolocations_with_limit_and_offset[asyncio]
+  dict({
+    'items': list([
+      dict({
+        'city': 'Mountain View',
+        'continent_code': 'NA',
+        'continent_name': 'North America',
+        'country_code': 'US',
+        'country_name': 'United States',
+        'id': 2,
+        'ip': '8.8.8.7',
+        'latitude': 37.422,
+        'longitude': -122.084,
+        'region_code': 'OH',
+        'region_name': 'Ohio',
+        'type': 'IPv4',
+        'updated_at': '2020-01-01T00:00:00',
+        'zip': '94043',
+      }),
+    ]),
+    'limit': 1,
+    'offset': 1,
+    'total': 2,
+  })
+# ---
+# name: test_list_existing_geolocations_with_limit_and_offset[trio]
+  dict({
+    'items': list([
+      dict({
+        'city': 'Mountain View',
+        'continent_code': 'NA',
+        'continent_name': 'North America',
+        'country_code': 'US',
+        'country_name': 'United States',
+        'id': 2,
+        'ip': '8.8.8.7',
+        'latitude': 37.422,
+        'longitude': -122.084,
+        'region_code': 'OH',
+        'region_name': 'Ohio',
+        'type': 'IPv4',
+        'updated_at': '2020-01-01T00:00:00',
+        'zip': '94043',
+      }),
+    ]),
+    'limit': 1,
+    'offset': 1,
+    'total': 2,
+  })
+# ---

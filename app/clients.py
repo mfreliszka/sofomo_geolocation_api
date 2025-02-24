@@ -4,9 +4,8 @@ import httpx
 from config.settings import settings
 from app.decorators import handle_ipstack_errors
 from fastapi import HTTPException, status
-from fastapi.responses import JSONResponse
-from json import JSONDecodeError
 from loguru import logger
+
 
 class IpstackClient:
     """Client for IPStack api."""
@@ -40,21 +39,23 @@ class IpstackClient:
 
             response.raise_for_status()
             return response.json()
-        except httpx.TimeoutException as timeout_exc:
-            logger.error(f"IPStack API request timed out.")
+        except httpx.TimeoutException:
+            logger.error("IPStack API request timed out.")
             raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Request timed out. Please try again later."
+                status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+                detail="Request timed out. Please try again later.",
             )
         except httpx.HTTPStatusError as status_exc:
-            logger.error(f"IPStack API returned error status: {status_exc.response.status_code}")
+            logger.error(
+                f"IPStack API returned error status: {status_exc.response.status_code}"
+            )
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Geolocation service is temporarily unavailable. Please try again later."
+                detail="Geolocation service is temporarily unavailable. Please try again later.",
             )
         except Exception as e:
             logger.error(f"Unexpected error in IPStack API request: {e}")
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=f"Unexpected error in IPStack API request: {e}"
+                detail=f"Unexpected error in IPStack API request: {e}",
             )

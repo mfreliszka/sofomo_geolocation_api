@@ -1,0 +1,89 @@
+# serializer version: 1
+# name: test_add_existing_geolocation[asyncio]
+  dict({
+    'data': dict({
+      'city': 'Mountain View',
+      'continent_code': 'NA',
+      'continent_name': 'North America',
+      'country_code': 'US',
+      'country_name': 'United States',
+      'id': 1,
+      'ip': '8.8.8.8',
+      'latitude': 37.422,
+      'longitude': -122.084,
+      'region_code': 'CA',
+      'region_name': 'California',
+      'type': 'IPv4',
+      'updated_at': '2020-01-01T00:00:00',
+      'zip': '94043',
+    }),
+    'message': "Geolocation for IP '8.8.8.8' already exists in database",
+  })
+# ---
+# name: test_add_existing_geolocation[trio]
+  dict({
+    'data': dict({
+      'city': 'Mountain View',
+      'continent_code': 'NA',
+      'continent_name': 'North America',
+      'country_code': 'US',
+      'country_name': 'United States',
+      'id': 1,
+      'ip': '8.8.8.8',
+      'latitude': 37.422,
+      'longitude': -122.084,
+      'region_code': 'CA',
+      'region_name': 'California',
+      'type': 'IPv4',
+      'updated_at': '2020-01-01T00:00:00',
+      'zip': '94043',
+    }),
+    'message': "Geolocation for IP '8.8.8.8' already exists in database",
+  })
+# ---
+# name: test_add_invalid_ip_address[asyncio]
+  dict({
+    'detail': "Invalid IP address: 'invalid_ip'",
+  })
+# ---
+# name: test_add_invalid_ip_address[trio]
+  dict({
+    'detail': "Invalid IP address: 'invalid_ip'",
+  })
+# ---
+# name: test_add_new_geolocation[asyncio]
+  dict({
+    'city': 'Glenmont',
+    'continent_code': 'NA',
+    'continent_name': 'North America',
+    'country_code': 'US',
+    'country_name': 'United States',
+    'id': 1,
+    'ip': '8.8.8.8',
+    'latitude': 40.5369987487793,
+    'longitude': -82.1285934448242,
+    'region_code': 'OH',
+    'region_name': 'Ohio',
+    'type': 'ipv4',
+    'updated_at': '2020-01-01T00:00:00',
+    'zip': '44628',
+  })
+# ---
+# name: test_add_new_geolocation[trio]
+  dict({
+    'city': 'Glenmont',
+    'continent_code': 'NA',
+    'continent_name': 'North America',
+    'country_code': 'US',
+    'country_name': 'United States',
+    'id': 1,
+    'ip': '8.8.8.8',
+    'latitude': 40.5369987487793,
+    'longitude': -82.1285934448242,
+    'region_code': 'OH',
+    'region_name': 'Ohio',
+    'type': 'ipv4',
+    'updated_at': '2020-01-01T00:00:00',
+    'zip': '44628',
+  })
+# ---
