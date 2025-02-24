@@ -8,7 +8,6 @@ A FastAPI-based application that provides CRUD operations for geolocation data, 
 - [Installation](#installation)
 - [Running the Application](#running-the-application)
 - [Endpoints](#endpoints)
-- [Database Migrations](#database-migrations)
 - [Testing](#testing)
 - [Docker Usage](#docker-usage)
 - [Makefile Commands](#makefile-commands)
@@ -23,18 +22,15 @@ A FastAPI-based application that provides CRUD operations for geolocation data, 
 - Poetry for dependency management
 
 ## Requirements
-- Poetry (for Python dependency management)
 - Docker (to run Dockerized environments, optional)
 - Docker Compose (for building and orchestrating containers)
-
-*(Alternatively, you can install and run everything directly on your machine, but Docker usage is recommended for production-like environments.)*
 
 ## Installation
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/yourusername/yourprojectname.git
-cd yourprojectname
+git clone git@github.com:mfreliszka/sofomo_geolocation_api.git
+cd sofomo_geolocation_api
 ```
 
 2. Install dependencies using Poetry:
@@ -51,13 +47,19 @@ There are two primary ways:
 
 ### 1. Local (using uvicorn)
 ```bash
+make install
+```
+- This will create a virtual environment (if not disabled) and install all Python dependencies.
+
+```bash
 make run
 ```
 - This calls `uvicorn app.main:application_factory --factory --reload`, which automatically restarts on code changes
 - By default, the app will listen on `http://127.0.0.1:8000`
 
-### 2. Docker Compose
+### 2. Docker Compose (preferred)
 ```bash
+make build
 make up
 ```
 - Builds and starts the containers (including your FastAPI app and any other services)
@@ -95,21 +97,6 @@ Below is a summary of available endpoints. The base prefix `/api` may vary if yo
 #### List All Geolocations From Database
 - `GET /api/geolocation/list`
 - Returns a list of all geolocation records
-
-## Database Migrations
-
-We use Alembic for handling migrations:
-
-1. Create a new migration (autogenerate changes):
-```bash
-make makemigrations
-```
-This will create a new migration file in your `migrations/versions` folder.
-
-2. Apply migrations (upgrade to latest):
-```bash
-make migrate
-```
 
 ## Testing
 
