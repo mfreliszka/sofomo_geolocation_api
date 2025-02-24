@@ -33,13 +33,7 @@ git clone git@github.com:mfreliszka/sofomo_geolocation_api.git
 cd sofomo_geolocation_api
 ```
 
-2. Install dependencies using Poetry:
-```bash
-make install
-```
-This will create a virtual environment (if not disabled) and install all Python dependencies.
-
-3. Configure environment variables as needed. For local development, you might have a `.env` file with database credentials or other configs.
+2. Configure environment variables as needed. For local development, you might have a `.env` file with database credentials or other configs.
 
 ## Running the Application
 
